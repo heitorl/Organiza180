@@ -1,18 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
+import { compare } from "bcrypt"
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm"
+import { Task } from "./Task"
 
 @Entity()
 export class User {
 
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id?: string
 
     @Column()
-    firstName: string
+    name: string
+
+    @Column({unique: true})
+    email: string
 
     @Column()
-    lastName: string
+    password: string
 
-    @Column()
-    age: number
+    @OneToMany(() => Task, (task) => task.user, { eager: true })
+    tasks: Task[]
+
+    comparePassword = async ( pwd: string ): Promise<boolean> => {
+        return await compare(this.password, pwd)
+    }
 
 }
