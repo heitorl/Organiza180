@@ -1,9 +1,9 @@
 import { Request } from "express";
-import { User } from "../../entities";
+import { Task, User } from "../../entities";
 
 declare module "express" {
   interface Request {
-    validated?: User;
+    validated?: User | Task;
     decoded?: User;
   }
 }

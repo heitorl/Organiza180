@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { compare, hash } from "bcrypt";
 import { Request } from "express"
 import { User } from "../entities";
 import { AppDataSource } from "../data-source";
@@ -21,29 +21,27 @@ class UserService {
 
   login = async ({validated}: Request): Promise<iUserLogin> => {
 
-    const user: User = await AppDataSource.getRepository(User).findOneBy({
-      email: validated.email
+    const foundUser: User = await AppDataSource.getRepository(User).findOneBy({
+      email: (validated as User).email
     })
-
-    if(!user){
+    
+    if(!foundUser){
       return {
         status: 401,
         message: {message: "Invalid Credentials"}
       }
     }
-
-    if(!(await user.comparePassword(validated.password))){
+    if (!(await compare((validated as User).password, foundUser.password))) {
       return {
         status: 401,
         message: {message: "Invalid Credentials"}
       }
     }
-
     const token: string = sign(
       {
-        id: user.id,
-        email: user.email,
-        name: user.name,
+        id: foundUser.id,
+        email: foundUser.email,
+        name: foundUser.name,
 
       },
       process.env.SECRET_KEY,
@@ -51,14 +49,14 @@ class UserService {
         expiresIn: process.env.EXPIRES_IN,
       }
     );
-
+    const { password, ...user } = foundUser  
 
     return { status: 200, message: { user, token }}
   }
 
 
   register = async({ validated }: Request): Promise<ISerializedUser> => {
-    validated.password = await hash(validated.password, 10);
+    (validated as User).password = await hash((validated as User).password, 10);
 
     const user: User = await AppDataSource.getRepository(User).save(validated);
     
