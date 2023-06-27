@@ -16,7 +16,7 @@ const validateToken = async (
 
     return verify(
       token,
-      process.env.SECRET_KEY,
+      "tiveproblemaemproducao",
       (err: VerifyErrors, decoded: string | JwtPayload) => {
         if (err) {
           return res.status(401).json({

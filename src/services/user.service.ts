@@ -44,10 +44,7 @@ class UserService {
         name: foundUser.name,
 
       },
-      process.env.SECRET_KEY,
-      {
-        expiresIn: process.env.EXPIRES_IN,
-      }
+      "tiveproblemaemproducao",      
     );
     const { password, ...user } = foundUser  
 
