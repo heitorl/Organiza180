@@ -4,6 +4,6 @@ node_modules/
 build/
 tmp/
 temp/
-.env
 *.lock
+.env
 package-lock*
