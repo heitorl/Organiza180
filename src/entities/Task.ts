@@ -10,8 +10,11 @@ export class Task {
     @Column()
     description: string
 
+    @Column({ default: "Em progresso" })
+    status?: string
+
     @Column()
-    status: string
+    dificulty?: string
 
     @CreateDateColumn()
     createdAt?: Date 

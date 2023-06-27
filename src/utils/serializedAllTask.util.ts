@@ -8,6 +8,7 @@ interface SerializedTaskData {
   };
   tasks: {
     id: string,
+    dificulty?: string,
     updatedAt: Date;
     createdAt: Date;
     status: string;
@@ -26,6 +27,7 @@ export const serializedTaskData = (user: User): SerializedTaskData => {
       id: task.id,
       updatedAt: task.updatedAt,
       createdAt: task.createdAt,
+      dificulty: task.dificulty,
       status: task.status,
       description: task.description,
     })),
